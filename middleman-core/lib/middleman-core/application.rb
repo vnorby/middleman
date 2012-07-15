@@ -4,6 +4,8 @@ require "tilt"
 # Use ActiveSupport JSON
 require "active_support/json"
 require "active_support/core_ext/integer/inflections"
+require "active_support/core_ext/float/rounding"
+require 'active_support/benchmarkable'
 
 # Simple callback library
 require "middleman-core/vendor/hooks-0.2.0/lib/hooks"
@@ -17,6 +19,9 @@ module Middleman
   class Application
     # Uses callbacks
     include Hooks
+    
+    # Support Benchmarks
+    include ::ActiveSupport::Benchmarkable
 
     # Before request hook
     define_hook :before
@@ -84,10 +89,6 @@ module Middleman
     # Middleman environment. Defaults to :development, set to :build by the build process
     # @return [String]
     set :environment, (ENV['MM_ENV'] && ENV['MM_ENV'].to_sym) || :development
-
-    # Whether logging is active, disabled by default
-    # @return [String]
-    set :logging, false
 
     # Which file should be used for directory indexes
     # @return [String]
@@ -218,11 +219,11 @@ module Middleman
       self
     end
 
-    # Whether we're logging
+    # The logger instance
     #
-    # @return [Boolean] If we're logging
-    def logging?
-      logging
+    # @return [Middleman::Logger] The logger
+    def logger
+      @_logger ||= ::Middleman::Logger.new
     end
 
     # Work around this bug: http://bugs.ruby-lang.org/issues/4521

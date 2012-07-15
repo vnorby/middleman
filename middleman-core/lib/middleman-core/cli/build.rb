@@ -76,7 +76,7 @@ module Middleman::Cli
       def shared_instance(verbose=false)
         @_shared_instance ||= ::Middleman::Application.server.inst do
           set :environment, :build
-          set :logging,     verbose
+          logger.level = 0 if verbose
         end
       end
       
@@ -146,6 +146,7 @@ module Middleman::Cli
   # A Thor Action, modular code, which does the majority of the work.
   class GlobAction < ::Thor::Actions::EmptyDirectory
     attr_reader :source
+    attr_reader :logger
 
     # Setup the action
     #
@@ -157,6 +158,8 @@ module Middleman::Cli
       @destination = @app.build_dir
 
       @source = File.expand_path(base.find_in_source_paths(source.to_s))
+
+      @logger = Middleman::Cli::Build.shared_instance.logger
 
       super(base, @destination, config)
     end
@@ -221,7 +224,7 @@ module Middleman::Cli
       sort_order = %w(.png .jpeg .jpg .gif .bmp .svg .svgz .ico .woff .otf .ttf .eot .js .css)
       
       # Pre-request CSS to give Compass a chance to build sprites
-      puts "== Prerendering CSS" if @app.logging?
+      logger.debug "== Prerendering CSS"
 
       @app.sitemap.resources.select do |resource|
         resource.ext == ".css"
@@ -229,7 +232,7 @@ module Middleman::Cli
         Middleman::Cli::Build.shared_rack.get(URI.escape(resource.destination_path))
       end
       
-      puts "== Checking for Compass sprites" if @app.logging?
+      logger.debug "== Checking for Compass sprites"
 
       # Double-check for compass sprites
       @app.files.find_new_files(Pathname.new(@app.source_dir) + @app.images_dir)
@@ -238,7 +241,7 @@ module Middleman::Cli
       # find files in the build folder when it needs to generate sprites for the
       # css files
 
-      puts "== Building files" if @app.logging?
+      logger.debug "== Building files"
 
       resources = @app.sitemap.resources.sort do |a, b|
         a_idx = sort_order.index(a.ext) || 100
