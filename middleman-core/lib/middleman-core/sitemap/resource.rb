@@ -54,23 +54,26 @@ module Middleman
       # Get the metadata for both the current source_file and the current path
       # @return [Hash]
       def metadata
-        result = store.metadata_for_file(source_file).dup
+        relative_source = Pathname(source_file).relative_path_from(Pathname(app.root))
+        benchmark "Get Metadata #{relative_source}" do
+          result = store.metadata_for_file(source_file).dup
 
-        path_meta = store.metadata_for_path(path).dup
-        if path_meta.has_key?(:blocks)
-          result[:blocks] << path_meta.delete(:blocks)
-        end
-        result.deep_merge!(path_meta)
+          path_meta = store.metadata_for_path(path).dup
+          if path_meta.has_key?(:blocks)
+            result[:blocks] << path_meta.delete(:blocks)
+          end
+          result.deep_merge!(path_meta)
 
-        local_meta = @local_metadata.dup
-        if local_meta.has_key?(:blocks)
-          result[:blocks] << local_meta.delete(:blocks)
-        end
-        result.deep_merge!(local_meta)
+          local_meta = @local_metadata.dup
+          if local_meta.has_key?(:blocks)
+            result[:blocks] << local_meta.delete(:blocks)
+          end
+          result.deep_merge!(local_meta)
 
-        result[:blocks] = result[:blocks].flatten.compact
+          result[:blocks] = result[:blocks].flatten.compact
         
-        result
+          result
+        end
       end
 
       # Merge in new metadata specific to this resource.
@@ -115,7 +118,7 @@ module Middleman
 
         relative_source = Pathname(source_file).relative_path_from(Pathname(app.root))
         
-        benchmark "Render #{relative_source}", :level => :debug do
+        benchmark "Render (all) #{relative_source}" do
           md   = metadata.dup
           opts = md[:options].deep_merge(opts)
           locs = md[:locals].deep_merge(locs)
@@ -125,14 +128,19 @@ module Middleman
             app.data.store("page", md[:page])
           end
         
-          md[:blocks].each do |aBlock|
-            app.instance_eval(&aBlock)
+          benchmark "Render (blocks) #{relative_source}" do
+            md[:blocks].each do |aBlock|
+              app.instance_eval(&aBlock)
+            end
+
+            app.instance_eval(&block) if block_given?
           end
-      
-          app.instance_eval(&block) if block_given?
         
           app.current_path ||= self.destination_path
-          app.render_template(source_file, locs, opts)
+          
+          benchmark "Render (template) #{relative_source}" do
+            app.render_template(source_file, locs, opts)
+          end
         end
       end
     

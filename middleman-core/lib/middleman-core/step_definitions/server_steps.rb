@@ -48,6 +48,10 @@ Given /^the Server is running$/ do
   }
   
   @server_inst = Middleman::Application.server.inst do
+    if ENV["MM_BENCHMARK"] && ENV["MM_BENCHMARK"] == "true"
+      set :benchmarking, true
+    end
+    
     initialize_commands.each do |p|
       instance_exec(&p)
     end

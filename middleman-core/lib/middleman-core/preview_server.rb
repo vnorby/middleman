@@ -21,6 +21,8 @@ module Middleman
           end
           
           logger.level = 0 if options[:debug]
+          
+          set :benchmarking, options[:benchmark]
         end
 
         port = options[:port] || DEFAULT_PORT

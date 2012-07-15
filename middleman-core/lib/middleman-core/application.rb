@@ -5,7 +5,6 @@ require "tilt"
 require "active_support/json"
 require "active_support/core_ext/integer/inflections"
 require "active_support/core_ext/float/rounding"
-require 'active_support/benchmarkable'
 
 # Simple callback library
 require "middleman-core/vendor/hooks-0.2.0/lib/hooks"
@@ -19,9 +18,6 @@ module Middleman
   class Application
     # Uses callbacks
     include Hooks
-    
-    # Support Benchmarks
-    include ::ActiveSupport::Benchmarkable
 
     # Before request hook
     define_hook :before
@@ -224,6 +220,23 @@ module Middleman
     # @return [Middleman::Logger] The logger
     def logger
       @_logger ||= ::Middleman::Logger.new
+    end
+    
+    # Default layout name
+    # @return [String, Symbold]
+    set :benchmarking, false
+    
+    # The benchmark method
+    def benchmark(*args, &block)
+      if benchmarking
+        @_benchmarker ||= begin
+          ::Middleman::Benchmarker.new
+        end
+        
+        @_benchmarker.benchmark(*args, &block)
+      else
+        yield
+      end
     end
 
     # Work around this bug: http://bugs.ruby-lang.org/issues/4521

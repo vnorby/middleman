@@ -47,7 +47,7 @@ module Middleman::CoreExtensions
   
     class FrontmatterManager
       attr_reader :app
-      delegate :logger, :to => :app
+      delegate :logger, :benchmark, :to => :app
     
       def initialize(app)
         @app = app
@@ -56,7 +56,9 @@ module Middleman::CoreExtensions
       
       def data(path)
         p = normalize_path(path)
-        @cache[p] ||= frontmatter_and_content(p)
+        @cache[p] ||= benchmark "Get Frontmatter #{p}" do
+          frontmatter_and_content(p)
+        end
       end
       
       def clear_data(file)

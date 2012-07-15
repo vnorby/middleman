@@ -1,5 +1,6 @@
 # Our custom logger
 require "middleman-core/logger"
+require "middleman-core/benchmarker"
 
 # Using Thor's indifferent hash access
 require "thor"

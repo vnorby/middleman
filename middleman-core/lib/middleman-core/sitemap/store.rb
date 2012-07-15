@@ -16,6 +16,8 @@ module Middleman
     
       # @return [Middleman::Application]
       attr_accessor :app
+      
+      delegate :benchmark, :to => :app
     
       # Initialize with parent app
       # @param [Middleman::Application] app
@@ -46,8 +48,10 @@ module Middleman
       # Rebuild the list of resources from scratch, using registed manipulators
       # @return [void]
       def rebuild_resource_list!(reason=nil)
-        @resources = @resource_list_manipulators.inject([]) do |result, (_, inst)|
-          newres = inst.manipulate_resource_list(result)
+        @resources = @resource_list_manipulators.inject([]) do |result, (name, inst)|
+          newres = benchmark "Manipulate Resources #{name}" do
+            inst.manipulate_resource_list(result)
+          end
 
           # Reset lookup cache
           @_lookup_cache = { :path => {}, :destination_path => {} }

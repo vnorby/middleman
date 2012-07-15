@@ -28,6 +28,10 @@ module Middleman::Cli
       :type    => :boolean, 
       :default => false,
       :desc    => 'Print debug messages'
+    method_option :benchmark,
+      :type    => :boolean, 
+      :default => false,
+      :desc    => 'Print benchmark messages'
     
     # Core build Thor command
     # @return [void]
@@ -45,7 +49,7 @@ module Middleman::Cli
       @debugging = Middleman::Cli::Base.respond_to?(:debugging) && Middleman::Cli::Base.debugging
       @had_errors = false
       
-      self.class.shared_instance(options["verbose"])
+      self.class.shared_instance(options["verbose"], options["benchmark"])
       
       self.class.shared_rack
 
@@ -73,10 +77,11 @@ module Middleman::Cli
       # Middleman::Application singleton
       #
       # @return [Middleman::Application]
-      def shared_instance(verbose=false)
+      def shared_instance(verbose=false, benchmarking=false)
         @_shared_instance ||= ::Middleman::Application.server.inst do
           set :environment, :build
           logger.level = 0 if verbose
+          set :benchmarking, benchmarking
         end
       end
       
