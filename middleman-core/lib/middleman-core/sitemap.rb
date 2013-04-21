@@ -46,6 +46,7 @@ module Middleman
 
         # Include instance methods
         app.send :include, InstanceMethods
+        app.helpers HelperMethods
 
         # Initialize Sitemap
         app.before_configuration do
@@ -64,7 +65,9 @@ module Middleman
       def sitemap
         @_sitemap ||= Store.new(self)
       end
+    end
 
+    module HelperMethods
       # Get the resource object for the current path
       # @return [Middleman::Sitemap::Resource]
       def current_page
