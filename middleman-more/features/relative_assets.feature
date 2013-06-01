@@ -6,7 +6,7 @@ Feature: Relative Assets
     And the Server is running at "relative-assets-app"
     When I go to "/stylesheets/relative_assets.css"
     Then I should not see "url('../"
-    And I should see "/images/blank.gif')"
+    And I should see '/images/blank.gif")'
     
   Scenario: Building css with the feature disabled
     Given a fixture app "relative-assets-app"
@@ -27,7 +27,7 @@ Feature: Relative Assets
     Given "relative_assets" feature is "enabled"
     And the Server is running at "relative-assets-app"
     When I go to "/stylesheets/relative_assets.css"
-    Then I should see "url('../images/blank.gif"
+    Then I should see 'url("../images/blank.gif'
     
   Scenario: Building css with the feature enabled
     Given a fixture app "relative-assets-app"
@@ -62,7 +62,7 @@ Feature: Relative Assets
     And "images_dir" is set to "img"
     And the Server is running at "relative-assets-app"
     When I go to "/stylesheets/relative_assets.css"
-    Then I should see "url('../img/blank.gif')"
+    Then I should see 'url("../img/blank.gif")'
     
   Scenario: Building css with a custom images_dir
     Given a fixture app "relative-assets-app"
@@ -88,7 +88,7 @@ Feature: Relative Assets
     Given "relative_assets" feature is "enabled"
     And the Server is running at "fonts-app"
     When I go to "/stylesheets/fonts.css"
-    Then I should see "url('../fonts/StMarie-Thin.otf"
+    Then I should see 'url("../fonts/StMarie-Thin.otf'
 
   Scenario: Relative assets via image_tag
     Given a fixture app "relative-assets-app"
