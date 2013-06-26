@@ -5,15 +5,15 @@ class Middleman::CoreExtensions::DefaultHelpers < ::Middleman::Extension
 
     require 'active_support/core_ext/object/to_query'
 
-    # app.helpers ::Padrino::Helpers::OutputHelpers
-    # app.helpers ::Padrino::Helpers::TagHelpers
-    # app.helpers ::Padrino::Helpers::AssetTagHelpers
-    # app.helpers ::Padrino::Helpers::FormHelpers
-    # app.helpers ::Padrino::Helpers::FormatHelpers
-    # app.helpers ::Padrino::Helpers::RenderHelpers
-    # app.helpers ::Padrino::Helpers::NumberHelpers
-    # # app.helpers ::Padrino::Helpers::TranslationHelpers
-    # app.helpers ::Padrino::Helpers::Breadcrumbs
+    app.helpers ::Padrino::Helpers::OutputHelpers
+    app.helpers ::Padrino::Helpers::TagHelpers
+    app.helpers ::Padrino::Helpers::AssetTagHelpers
+    app.helpers ::Padrino::Helpers::FormHelpers
+    app.helpers ::Padrino::Helpers::FormatHelpers
+    app.helpers ::Padrino::Helpers::RenderHelpers
+    app.helpers ::Padrino::Helpers::NumberHelpers
+    # app.helpers ::Padrino::Helpers::TranslationHelpers
+    app.helpers ::Padrino::Helpers::Breadcrumbs
 
     app.config.define_setting :relative_links, false, 'Whether to generate relative links instead of absolute ones'
   end

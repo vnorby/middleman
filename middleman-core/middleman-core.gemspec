@@ -29,8 +29,7 @@ Gem::Specification.new do |s|
   s.add_dependency("thor", [">= 0.15.2", "< 2.0"])
   
   # Helpers
-  s.add_dependency("activesupport", ["4.0.0.rc2"])
-  s.add_dependency("actionpack", ["4.0.0.rc2"])
+  s.add_dependency("activesupport", ["~> 4.0.0"])
   
   # Watcher
   s.add_dependency("listen", ["~> 1.2.2"])

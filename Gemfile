@@ -19,17 +19,12 @@ gem "liquid", :require => false
 gem "less", :require => false
 gem "stylus", :require => false
 
-# gem "pry", :require => false
-# gem "pry-debugger", :require => false
-
 platforms :ruby do
   gem "therubyracer"
   gem "redcarpet"
-end
-
-# Cross-templating language block fix for Ruby 1.8
-platforms :mri_18 do
-  gem "ruby18_source_location"
+  gem "pry", :require => false
+  gem "pry-debugger", :require => false
+  gem "cane", :require => false
 end
 
 platforms :jruby do
@@ -37,11 +32,9 @@ platforms :jruby do
 end
 
 # Code Quality
-gem "cane", :platforms => [:mri_19, :mri_20], :require => false
 gem 'coveralls', :require => false
 
 # Middleman itself
 gem "middleman-core", :path => "middleman-core"
-gem "middleman-more", :path => "middleman-more"
 gem "middleman-sprockets", :github => "middleman/middleman-sprockets"
 gem "middleman", :path => "middleman"
