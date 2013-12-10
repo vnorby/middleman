@@ -18,18 +18,13 @@ gem "slim", :require => false
 gem "liquid", :require => false
 gem "less", "~> 2.3.0", :require => false
 gem "stylus", :require => false
-
-# gem "pry", :require => false
-# gem "pry-debugger", :require => false
+gem "asciidoctor", :require => false
 
 platforms :ruby do
   gem "therubyracer"
-  gem "redcarpet", /^1\.8/.match(RUBY_VERSION) ? "~> 2.0" : "~> 3.0"
-end
-
-# Cross-templating language block fix for Ruby 1.8
-platforms :mri_18 do
-  gem "ruby18_source_location"
+  gem "redcarpet", "~> 3.0"
+  gem "pry", :require => false
+  gem "pry-debugger", :require => false
 end
 
 platforms :jruby do
@@ -42,6 +37,7 @@ gem 'coveralls', :require => false
 
 # Middleman itself
 gem "middleman-core", :path => "middleman-core"
-gem "middleman-more", :path => "middleman-more"
 gem "middleman-sprockets", :github => "middleman/middleman-sprockets"
 gem "middleman", :path => "middleman"
+
+gem 'parallel'

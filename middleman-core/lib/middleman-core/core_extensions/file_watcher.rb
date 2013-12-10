@@ -99,7 +99,7 @@ module Middleman
         def did_change(path)
           path = Pathname(path)
           return if ignored?(path)
-          logger.debug "== File Change: #{path}"
+          logger.debug "== File Change: #{path}" unless app.build?
           @known_paths << path
           self.run_callbacks(path, :changed)
         end

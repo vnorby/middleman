@@ -1,14 +1,3 @@
-# Required to hack around Padrino blocks within different template types.
-require 'rbconfig'
-if RUBY_VERSION =~ /1.8/ && RbConfig::CONFIG['ruby_install_name'] == 'ruby'
-  begin
-    require 'ruby18_source_location'
-  rescue LoadError
-    $stderr.puts "Ruby 1.8 requires the 'ruby18_source_location' gem be added to your Gemfile"
-    exit(1)
-  end
-end
-
 if !defined?(::Padrino::Helpers)
   require 'vendored-middleman-deps/padrino-core-0.11.2/lib/padrino-core/support_lite'
   require 'vendored-middleman-deps/padrino-helpers-0.11.2/lib/padrino-helpers'
@@ -132,7 +121,7 @@ class Middleman::CoreExtensions::DefaultHelpers < ::Middleman::Extension
     # Generate body css classes based on the current path
     #
     # @return [String]
-    def page_classes
+    def page_classes(options={})
       path = current_path.dup
       path << index_file if path.end_with?('/')
       path = ::Middleman::Util.strip_leading_slash(path)
@@ -141,7 +130,15 @@ class Middleman::CoreExtensions::DefaultHelpers < ::Middleman::Extension
       parts = path.split('.').first.split('/')
       parts.each_with_index { |path, i| classes << parts.first(i+1).join('_') }
 
-      classes.join(' ')
+      prefix = options[:numeric_prefix] || "x"
+      classes.map do |c|
+        # Replace weird class name characters
+        c = c.gsub(/[^a-zA-Z0-9\-_]/, '-')
+
+        # Class names can't start with a digit
+        c = "#{prefix}#{c}" if c =~ /\A\d/
+        c
+      end.join(' ')
     end
 
     # Get the path of a file of a given type
